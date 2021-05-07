@@ -92,10 +92,56 @@ const defaultOrder = {
 type Order = typeof defaultOrder
 
 function checkOrders(orders: Order[]) {
-  let valid = true;
-  for(let order of orders) {
+  let valid = true
+  for (let order of orders) {
     valid = valid && order.articles.length > 0
   }
 
   return valid
 }
+
+class Discount {
+  isPercentage: boolean
+  amount: number
+
+  constructor(isPercentage: boolean, amount: number) {
+    this.isPercentage = isPercentage
+    this.amount = amount
+  }
+
+  apply(article: Article) {
+    if (this.isPercentage) {
+      article.price = article.price - article.price * this.amount
+    } else {
+      article.price = article.price - this.amount
+    }
+  }
+}
+
+let discount: Discount = new Discount(true, 0.2)
+let allProductsTwentyBucks: Discount = {
+  isPercentage: false,
+  amount: 20,
+  apply(article) {
+    article.price = 20
+  }
+}
+
+class TwentyPercentDiscount extends Discount {
+  constructor() {
+    super(true, 0.2)
+  }
+
+  apply(article: Article) {
+    if (this.isValidForDiscount(article)) {
+      super.apply(article)
+    }
+  }
+
+  isValidForDiscount(article: Article) {
+    return article.price <= 40
+  }
+}
+
+let disco1: Discount = new TwentyPercentDiscount()
+let disco2: TwentyPercentDiscount = new Discount(true, 0.3)
