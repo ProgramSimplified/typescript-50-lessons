@@ -144,4 +144,4 @@ class TwentyPercentDiscount extends Discount {
 }
 
 let disco1: Discount = new TwentyPercentDiscount()
-let disco2: TwentyPercentDiscount = new Discount(true, 0.3)
+// let disco2: TwentyPercentDiscount = new Discount(true, 0.3)
