@@ -2,8 +2,8 @@ type Article = {
   title: string
   price: number
   vat: number
-  stock: number
-  description: string
+  stock?: number
+  description?: string
 }
 
 function addVAT(price: number, vat = 0.2): number {
@@ -26,14 +26,6 @@ function selectDeliveryAddress(addressOrIndex: unknown) {
     return addressOrIndex
   }
   return ''
-}
-
-const book: Article = {
-  title: 'Form Design Patterns by Adam Silver',
-  price: 32.77,
-  vat: 0.19,
-  stock: 1000,
-  description: 'A practical book on accessibility and forms'
 }
 
 const movBackup = {
@@ -145,3 +137,49 @@ class TwentyPercentDiscount extends Discount {
 
 let disco1: Discount = new TwentyPercentDiscount()
 // let disco2: TwentyPercentDiscount = new Discount(true, 0.3)
+
+interface ShopItem {
+  title: string;
+  price: number;
+  vat: number;
+  stock?: number;
+  description?: string;
+}
+
+const shopItem: ShopItem = {
+  title: 'Inclusive components',
+  price: 30,
+  vat: 0.2
+}
+
+discount.apply(shopItem)
+
+class DVD implements ShopItem {
+  title: string
+  price: number
+  vat: number
+
+  constructor(title: string) {
+    this.title = title
+    this.price = 9.99
+    this.vat = 0.2
+  }
+}
+
+class Book implements Article {
+  title: string
+  price: number
+  vat: number
+
+  constructor(title: string) {
+    this.title = title
+    this.price = 39
+    this.vat = 0.2
+  }
+}
+
+let book = new Book('Art Direction on the Web')
+discount.apply(book)
+
+let dvd = new DVD('Contagion')
+discount.apply(dvd)
