@@ -183,3 +183,18 @@ discount.apply(book)
 
 let dvd = new DVD('Contagion')
 discount.apply(dvd)
+
+class ArticlePrivate {
+  public title: string
+  private price: number
+
+  constructor(title: string, price: number) {
+    this.title = title
+    this.price = price
+  }
+}
+
+const article = new ArticlePrivate('Smashing Book 6', 39)
+
+// Error: Property 'price' is private and only accessible within class 'ArticlePrivate'
+console.log(article.price)
