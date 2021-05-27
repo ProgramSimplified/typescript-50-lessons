@@ -39,3 +39,23 @@ function displaySearch(
 function inputChangeHandler(this: HTMLInputElement, ev: Event) {
   this.parentElement?.classList.add('active')
 }
+
+const result = {
+  title: 'A guide to @@starthl@@Ember@@endhl@@.js',
+  url: '/a-guide-to-ember',
+  description: `The framework @@starthl@@Ember@@endhl@@.js
+     in a nutshell`
+}
+
+let markup = highlight`<li>${result.title}</li>`
+
+function highlight(strings: TemplateStringsArray, ...values: string[]) {
+  let str = ''
+  strings.forEach((templ, i) => {
+    let expr =
+      values[i]?.replace('@@start@@', '<em>').replace('@@end@@', '</em>') ?? ''
+
+    str += templ + expr
+  })
+  return str
+}
