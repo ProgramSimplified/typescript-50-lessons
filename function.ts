@@ -4,58 +4,55 @@ type Result = {
   abstract: string
 }
 
+function search(term: string, tags?: string[]): Promise<Result[]>
 function search(
-  query: string,
+  term: string,
   callback: (results: Result[]) => void,
   tags?: string[]
+): void
+function search(
+  term: string,
+  p2?: string[] | ((results: Result[]) => void),
+  p3?: string[]
 ) {
-  let queryString = `?query=${query}`
+  // We only have a callback if `p2` is a function
+  const callback = typeof p2 === 'function' ? p2 : undefined
+
+  // We have tags if p2 is defined and an array, or if p3
+  // is defined and an array
+  const tags =
+    typeof p2 !== 'undefined' && Array.isArray(p2)
+      ? p2
+      : typeof p3 !== 'undefined' && Array.isArray(p3)
+      ? p3
+      : undefined
+
+  let queryString = `?query=${term}`
 
   if (tags && tags.length) {
+    // tags at this point has to be an array
     queryString += `&tags=${tags.join()}`
   }
 
-  fetch(`/search${queryString}`)
-    .then((response) => response.json() as Promise<Result[]>)
-    .then((results) => void callback(results))
+  // The actual fetching of results!
+  const results = fetch(`/search${queryString}`).then((response) =>
+    response.json()
+  )
+
+  // callback is either undefined or a function, as
+  // seen above
+  if (callback) {
+    // Now it's definitely a function! So let's then()
+    // the results and call the callback!
+    // We don't return anything. This is equivalent to
+    // void
+    return void results.then((res) => callback(res))
+  } else {
+    // Otherwise, we have to return a promise with
+    // results as described in the first function
+    // overload
+    return results
+  }
 }
 
-search('Ember', function (results) {
-  console.log(results)
-})
-
-type SearchFn = typeof search
-
-function displaySearch(
-  inputId: string,
-  outputId: string,
-  search: SearchFn
-): void {
-  document
-    .getElementById(inputId)
-    ?.addEventListener('change', inputChangeHandler)
-}
-
-function inputChangeHandler(this: HTMLInputElement, ev: Event) {
-  this.parentElement?.classList.add('active')
-}
-
-const result = {
-  title: 'A guide to @@starthl@@Ember@@endhl@@.js',
-  url: '/a-guide-to-ember',
-  description: `The framework @@starthl@@Ember@@endhl@@.js
-     in a nutshell`
-}
-
-let markup = highlight`<li>${result.title}</li>`
-
-function highlight(strings: TemplateStringsArray, ...values: string[]) {
-  let str = ''
-  strings.forEach((templ, i) => {
-    let expr =
-      values[i]?.replace('@@start@@', '<em>').replace('@@end@@', '</em>') ?? ''
-
-    str += templ + expr
-  })
-  return str
-}
+search()
