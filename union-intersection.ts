@@ -31,3 +31,7 @@ type Webinar = TechEventBase & {
 }
 
 type TechEvent = Webinar | Conference | Meetup
+
+type EventKind = 'webinar' | 'conference' | 'meetup'
+
+let tomorrowsEvent: EventKind = 'concert' // not Ok!
