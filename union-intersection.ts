@@ -36,74 +36,24 @@ type Webinar = TechEventBase & {
 
 type TechEvent = Webinar | Conference | Meetup
 
-type EventKind = 'webinar' | 'conference' | 'meetup'
+function filterByKind(list: TechEvent[], kind: EventKind): TechEvent[] {
+  return list.filter((el) => el.kind === kind)
+}
 
-let tomorrowsEvent: EventKind = 'concert' // not Ok!
+type EventKind = TechEvent['kind']
 
-function getEventTeaser(event: TechEvent) {
-  switch (event.kind) {
-    case 'conference':
-      // We now know that I'm in type Conference
-      return (
-        `${event.title} (Conference), ` +
-        // Suddenly I don't have to check for price as
-        // TypeScript knows it will be there
-        `priced at ${event.price} USD`
-      )
-    case 'meetup':
-      // We now know that we're in type Meetup
-      return (
-        `${event.title} (Meetup), ` +
-        // Suddenly we can say for sure that this
-        // event will have a location, because the
-        // type tells us
-        `hosted at ${event.location}`
-      )
-    case 'webinar':
-      // We now know that we're in type Webinar
-      return (
-        `${event.title} (Webinar), ` +
-        // Suddenly we can say for sure that there will
-        // be a URL
-        `available online at ${event.url}`
-      )
-    default:
-      throw new Error('Not sure what to do with that!')
+type GroupedEvents = {
+  [Kind in EventKind]: TechEvent[]
+}
+
+function groupEvents(events: TechEvent[]): GroupedEvents {
+  const grouped: any = {
+    conference: [],
+    meetup: [],
+    webinar: []
   }
+  events.forEach((el) => {
+    grouped[el.kind].push(el)
+  })
+  return grouped
 }
-
-const script19 = {
-  title: 'ScriptConf',
-  date: new Date('2019-10-25'),
-  capacity: 300,
-  rsvp: 289,
-  description: 'The feel-good JS conference',
-  kind: 'conference' as const,
-  price: 129,
-  location: 'Central Linz',
-  talks: [
-    {
-      speaker: 'Vitaly Friedman',
-      title: 'Designing with Privacy in Mind',
-      abstract: '...'
-    }
-  ]
-}
-
-getEventTeaser(script19)
-
-type UnionType = {
-  title: string
-  value: 'a' | 'b' | 'c'
-}
-
-const value = {
-  title: 'cTitle',
-  value: 'a' as const
-}
-
-function func(value: UnionType) {
-  return value
-}
-
-func(value)
