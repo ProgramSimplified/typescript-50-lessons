@@ -79,3 +79,12 @@ function appendEventToList(event: TechEvent) {
   const element = getTeaserListElement(event)
   list?.append(element)
 }
+
+function tail<T extends any[]>(arr: readonly [any, ...T]) {
+  const [_ignored, ...rest] = arr
+  return rest
+}
+
+type List = [string, number, ...string[]]
+
+const list: List = ['1', 2]
