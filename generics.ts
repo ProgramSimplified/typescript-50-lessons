@@ -31,7 +31,10 @@ function isSubtitleAvailable(
 
 declare const subtitles: SubtitleURLs
 
-function isAvailable<T>(obj: T, key: string | number | symbol): key is keyof T {
+function isAvailable<T extends object>(
+  obj: T,
+  key: string | number | symbol
+): key is keyof T {
   return key in obj
 }
 
@@ -39,8 +42,15 @@ function isAvailable<T>(obj: T, key: string | number | symbol): key is keyof T {
 isAvailable<SubtitleURLs>(subtitles, 'key')
 isAvailable(subtitles, 'key')
 
-async function randomNumber() {
-  return Math.random()
+const a = isAvailable({ name: 'SteFan' }, 'age')
+
+type URLList = {
+  [k: string]: URL
 }
 
-let aMixedArray: Array<number | string | symbol> = [Symbol('ss')]
+function loadFile<Formats extends URLList>(
+  fileFormats: Formats,
+  format: string
+) {}
+
+loadFile({ name: new URL('/xxfs') }, 'age')
