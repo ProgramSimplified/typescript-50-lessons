@@ -48,9 +48,24 @@ type URLList = {
   [k: string]: URL
 }
 
-function loadFile<Formats extends URLList>(
-  fileFormats: Formats,
-  format: string
-) {}
+type Loaded<Key> = {
+  format: Key
+  loaded: boolean
+}
 
-loadFile({ name: new URL('/xxfs') }, 'age')
+async function loadFile<Formats extends URLList, Key extends keyof Formats>(
+  fileFormats: Formats,
+  format: Key
+): Promise<Loaded<Key>> {
+  const data = await fetch(fileFormats[format].href)
+  return {
+    format,
+    loaded: data.response === 200
+  }
+}
+
+const result = await loadFile(videos, 'format360p')
+if (result.format !== 'format360p') {
+  // result.format is now never!
+  throw new Error('Your implementation is wrong')
+}
