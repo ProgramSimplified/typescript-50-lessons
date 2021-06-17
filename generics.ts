@@ -69,3 +69,53 @@ if (result.format !== 'format360p') {
   // result.format is now never!
   throw new Error('Your implementation is wrong')
 }
+
+type HD = Pick<VideoFormatURLs, 'format1080p' | 'format720p'>
+
+type Format360 = {
+  format360p: URL
+}
+
+type Format480 = {
+  format480p: URL
+}
+
+type Format720 = {
+  format720p: URL
+}
+
+type Format1080 = {
+  format1080p: URL
+}
+
+// type AvailableFormats = Format360 | Format480 | Format720 | Format1080
+
+// const hq: AvailableFormats = {
+//   format720p: new URL('...'),
+//   format1080p: new URL('...')
+// } // OK!
+
+type Split<Obj> = {
+  [Prop in keyof Obj]: Record<Prop, Obj[Prop]>
+}[keyof Obj]
+
+type AvailableFormats = Split<VideoFormatURLs>
+
+const lofi: AvailableFormats = {
+  format360p: new URL('...'),
+  format480p: new URL('...')
+} // OK!
+
+type CustomType = {
+  a: string
+  b: number
+  c: symbol
+}
+
+type UnionTypes = Split<CustomType>
+
+// OK!
+const customer: UnionTypes = {
+  a: '123',
+  b: 123
+}
