@@ -105,17 +105,3 @@ const lofi: AvailableFormats = {
   format360p: new URL('...'),
   format480p: new URL('...')
 } // OK!
-
-type CustomType = {
-  a: string
-  b: number
-  c: symbol
-}
-
-type UnionTypes = Split<CustomType>
-
-// OK!
-const customer: UnionTypes = {
-  a: '123',
-  b: 123
-}
