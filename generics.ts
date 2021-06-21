@@ -105,3 +105,44 @@ const lofi: AvailableFormats = {
   format360p: new URL('...'),
   format480p: new URL('...')
 } // OK!
+
+type UserPreferences = {
+  format: keyof VideoFormatURLs
+  subtitles: {
+    active: boolean
+    language: keyof SubtitleURLs
+  }
+  theme: 'dark' | 'light'
+}
+
+const defaultUP: UserPreferences = {
+  format: 'format1080p',
+  subtitles: {
+    active: false,
+    language: 'english'
+  },
+  theme: 'light'
+}
+
+function combinePreferences(
+  defaultP: UserPreferences,
+  userP: Partial<UserPreferences>
+) {
+  return { ...defaultP, ...userP }
+}
+
+const prefs = combinePreferences(defaultUP, { format: 'format720p' })
+
+type OK = Partial<UserPreferences>
+
+type MyRequired<Obj> = {
+  [Key in keyof Obj]-?: Obj[Key]
+}
+
+type Reu = MyRequired<OK>
+
+type DeepReadonly<Obj> = {
+  readonly [Key in keyof Obj]: DeepReadonly<Obj[Key]>
+}
+
+type ReadonlyUserPreferences = DeepReadonly<UserPreferences>
