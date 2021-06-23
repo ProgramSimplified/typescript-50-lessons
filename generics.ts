@@ -124,16 +124,19 @@ const defaultUP: UserPreferences = {
   theme: 'light'
 }
 
-function combinePreferences(
+function combinePreferences<UserPref extends Partial<UserPreferences>>(
   defaultP: UserPreferences,
-  userP: Partial<UserPreferences>
+  userP: UserPref
 ) {
   return { ...defaultP, ...userP }
 }
 
-const prefs = combinePreferences(defaultUP, { format: 'format720p' })
+const prefs = combinePreferences(defaultUP, {
+  format: 'format720p',
+  theme: 'dark'
+})
 
-type OK = Partial<UserPreferences>
+console.log(prefs.theme)
 
 type MyRequired<Obj> = {
   [Key in keyof Obj]-?: Obj[Key]
@@ -147,4 +150,41 @@ type DeepReadonly<Obj> = {
 
 type ReadonlyUserPreferences = DeepReadonly<UserPreferences>
 
-// hi, there
+const userSettings: Partial<UserPreferences> = {
+  format: 'format720p',
+  theme: 'dark'
+}
+
+combinePreferences(defaultUP, userSettings)
+
+type UserPreference = {
+  format: '1080p' | '360p'
+  subtitles: {
+    active: boolean
+    language: 'chinese' | 'english'
+  }
+  theme: 'dark' | 'light'
+}
+
+const defaultU: UserPreference = {
+  format: '1080p',
+  subtitles: {
+    active: false,
+    language: 'english'
+  },
+  theme: 'light'
+}
+
+function combinePreference(
+  defaultP: UserPreference,
+  userP: Partial<UserPreference>
+) {
+  return { ...defaultP, ...userP }
+}
+
+const Me = combinePreference(defaultU, {
+  format: '360p',
+  theme: 'dark'
+})
+
+console.log(Me.theme)
