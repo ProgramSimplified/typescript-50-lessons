@@ -157,34 +157,36 @@ const userSettings: Partial<UserPreferences> = {
 
 combinePreferences(defaultUP, userSettings)
 
-type UserPreference = {
-  format: '1080p' | '360p'
-  subtitles: {
-    active: boolean
-    language: 'chinese' | 'english'
+type Nullable<G> = G | undefined
+
+class Container<GElement extends HTMLElement = HTMLVideoElement> {
+  #element: Nullable<GElement>
+  #prefs: UserPreferences
+
+  constructor(prefs: UserPreferences) {
+    this.#prefs = prefs
   }
-  theme: 'dark' | 'light'
+
+  set element(value: Nullable<GElement>) {
+    this.#element = value
+  }
+
+  get element(): Nullable<GElement> {
+    return this.#element
+  }
+
+  loadVideo(formats: VideoFormatURLs) {
+    const selectedFormat = formats[this.#prefs.format].href
+    if (this.#element instanceof HTMLVideoElement) {
+      this.#element.src = selectedFormat
+    } else if (this.#element) {
+      const vid = document.createElement('video')
+      this.#element.appendChild(vid)
+      vid.src = selectedFormat
+    }
+  }
 }
 
-const defaultU: UserPreference = {
-  format: '1080p',
-  subtitles: {
-    active: false,
-    language: 'english'
-  },
-  theme: 'light'
-}
-
-function combinePreference(
-  defaultP: UserPreference,
-  userP: Partial<UserPreference>
-) {
-  return { ...defaultP, ...userP }
-}
-
-const Me = combinePreference(defaultU, {
-  format: '360p',
-  theme: 'dark'
-})
-
-console.log(Me.theme)
+const container = new Container(prefs)
+container.element = document.createElement('video')
+container.loadVideo(videos)
