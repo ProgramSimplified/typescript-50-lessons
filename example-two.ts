@@ -81,9 +81,9 @@ const defaultOrder = {
   }
 }
 
-type Order = typeof defaultOrder
+type Orders = typeof defaultOrder
 
-function checkOrders(orders: Order[]) {
+function checkOrders(orders: Orders[]) {
   let valid = true
   for (let order of orders) {
     valid = valid && order.articles.length > 0
@@ -139,11 +139,11 @@ let disco1: Discount = new TwentyPercentDiscount()
 // let disco2: TwentyPercentDiscount = new Discount(true, 0.3)
 
 interface ShopItem {
-  title: string;
-  price: number;
-  vat: number;
-  stock?: number;
-  description?: string;
+  title: string
+  price: number
+  vat: number
+  stock?: number
+  description?: string
 }
 
 const shopItem: ShopItem = {
