@@ -29,12 +29,21 @@ type Order = {
   date: Date
 }
 
-function fetchOrder(customer: Customer): Order[]
-function fetchOrder(product: Product): Order[]
-function fetchOrder(orderId: number): Order
-function fetchOrder(param: any): any {
-  // Implementation to follow
-}
+type FetchParams = number | Customer | Product
+
+type FetchReturn<Param extends FetchParams> = Param extends Customer
+  ? Order[]
+  : Param extends Product
+  ? Order[]
+  : Order
+
+function fetchOrder<Param extends FetchParams>(
+  param: Param
+): FetchReturn<Param> {}
 
 fetchOrder(customer)
 fetchOrder(2)
+
+declare const ambiguous: Customer | number
+
+fetchOrder(ambiguous)
