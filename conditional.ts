@@ -37,13 +37,35 @@ type FetchReturn<Param extends FetchParams> = Param extends Customer
   ? Order[]
   : Order
 
-function fetchOrder<Param extends FetchParams>(
-  param: Param
-): FetchReturn<Param> {}
+type Callback<Res> = (result: Res) => void
 
-fetchOrder(customer)
-fetchOrder(2)
+type FetchCb<T extends FetchParams> = Callback<FetchReturn<T>>
 
-declare const ambiguous: Customer | number
+type AsyncResult<FHead, Par extends FetchParams> = FHead extends [
+  Par,
+  FetchCb<Par>
+]
+  ? void
+  : FHead extends [Par]
+  ? Promise<FetchReturn<Par>>
+  : never
 
-fetchOrder(ambiguous)
+function fetchOrder<Par extends FetchParams>(
+  inp: Par,
+  fun?: Callback<FetchReturn<Par>>
+): Promise<FetchReturn<Par>> | void {
+  // Fetch the result
+  const res = fetch(`/backend?inp=${JSON.stringify(inp)}`).then((res) =>
+    res.json()
+  )
+
+  // If there's a callback, call it
+  if (fun) {
+    res.then((result) => {
+      fun(result)
+    })
+  } else {
+    // Otherwise return the result promise
+    return res
+  }
+}
