@@ -69,3 +69,27 @@ function fetchOrder<Par extends FetchParams>(
     return res
   }
 }
+
+type FetchByProductOrId = FetchReturn<Product | number | Customer>
+
+type FetchReturn2<Param extends FetchParams> = [Param] extends [Customer]
+  ? Order[]
+  : [Param] extends [Product]
+  ? Order[]
+  : Order
+
+type FetchByCustomer = FetchReturn<Customer | number>
+
+type TypeName<T> = [T] extends [string]
+  ? string
+  : [T] extends [number]
+  ? number
+  : [T] extends [boolean]
+  ? boolean
+  : [T] extends [undefined]
+  ? undefined
+  : [T] extends [Function]
+  ? Function
+  : object
+
+type T4 = TypeName<string | string[]>
