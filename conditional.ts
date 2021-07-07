@@ -93,3 +93,47 @@ type TypeName<T> = [T] extends [string]
   : object
 
 type T4 = TypeName<string | string[]>
+
+type Medium = {
+  id: number
+  title: string
+  artist: string
+}
+
+type TrackInfo = {
+  duration: number
+  tracks: number
+}
+
+type CD = Medium &
+  TrackInfo & {
+    kind: 'cd'
+  }
+
+type LP = Medium & {
+  sides: {
+    a: TrackInfo
+    b: TrackInfo
+  }
+  kind: 'lp'
+}
+
+type AllMedia = CD | LP
+type MediaKinds = AllMedia['kind'] // 'lp' | 'cd'
+
+declare function createMedium<Kin extends MediaKinds>(kind: Kin, info): AllMedia
+
+type SelectBranch<Branch, Kin> = Branch extends { kind: Kin } ? Branch : never
+
+type SelectCD = SelectBranch<AllMedia, 'cd'>
+
+type A = 'lp' | 'ss' extends MediaKinds ? 'ok' : never
+
+type B = {
+  kind: string
+  aa: string
+}
+
+type Extract2<A, B> = [A] extends [B] ? A : never
+
+type BB = Extract2<'lp', MediaKinds>
