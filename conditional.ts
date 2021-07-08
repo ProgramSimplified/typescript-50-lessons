@@ -137,3 +137,4 @@ type B = {
 type Extract2<A, B> = [A] extends [B] ? A : never
 
 type BB = Extract2<'lp', MediaKinds>
+
