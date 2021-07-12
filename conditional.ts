@@ -138,3 +138,14 @@ type Extract2<A, B> = [A] extends [B] ? A : never
 
 type BB = Extract2<'lp', MediaKinds>
 
+type Removable = 'kind' | 'id'
+
+type Remove<A, B> = A extends B ? never : A
+
+type CDKeys = keyof CD
+
+type CDInfoKeys = Remove<CDKeys, Removable>
+
+type CDInfo = Pick<CD, Exclude<keyof CD, 'kind' | 'id'>>
+
+// type CDInfo = Omit<CD, 'kind' | 'id'>
