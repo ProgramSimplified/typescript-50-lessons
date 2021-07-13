@@ -149,3 +149,35 @@ type CDInfoKeys = Remove<CDKeys, Removable>
 type CDInfo = Pick<CD, Exclude<keyof CD, 'kind' | 'id'>>
 
 // type CDInfo = Omit<CD, 'kind' | 'id'>
+
+let userId = 0
+
+function createUser(
+  name: string,
+  role: 'admin' | 'maintenance' | 'shipping',
+  isActive: boolean
+) {
+  return {
+    userId: userId++,
+    name,
+    role,
+    isActive,
+    createAt: new Date()
+  }
+}
+
+const user = createUser('Stefan', 'shipping', true)
+
+type User = ReturnType<typeof createUser>
+
+type ParamType<T> = T extends (...args: (infer P)[]) => any ? P : T
+
+interface Userss {
+  name: string
+  age: number
+}
+
+type Func = (user: Userss) => void
+
+type Param = ParamType<Func>
+type AA = ParamType<string>
