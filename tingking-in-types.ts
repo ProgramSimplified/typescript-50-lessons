@@ -106,5 +106,3 @@ const itemSerializer = new Serializer<Item>()
 const serialization = itemSerializer.serialize(anItem)
 
 const obj = itemSerializer.deserializer(serialization)
-
-console.log('nothing')
