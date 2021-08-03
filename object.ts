@@ -36,4 +36,3 @@ let person = {}
 if (typeof person === 'object' && person.hasOwnProperty('name')) {
   console.log(person.name)
 }
-
