@@ -15,11 +15,11 @@ Object.defineProperty(storage, 'max', {
 let currentStorage = undefined
 
 function storageUsed() {
-  if(currentStorage) {
+  if (currentStorage) {
     return currentStorage
   }
   currentStorage = 0
-  for(let i = 0; i < storage.length(); i++) {
+  for (let i = 0; i < storage.length(); i++) {
     currentStorage += storage.items[i].weigth
   }
   return currentStorage
@@ -42,4 +42,3 @@ function add(item) {
     console.log(`${currentStorage} kg total`)
   }
 }
-
